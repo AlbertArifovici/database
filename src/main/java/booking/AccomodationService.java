@@ -3,7 +3,6 @@ package booking;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 public class AccomodationService {
@@ -40,7 +39,7 @@ public class AccomodationService {
                     result.getString("type"),
                     result.getString("bed_type"),
                     result.getInt("max_guests"),
-                    result.getString("description") );
+                    result.getString("description"));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -51,7 +50,7 @@ public class AccomodationService {
     public List<Accomodation> getAccomodationByMaxGuests(int MaxGuests) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM accomodation WHERE max_guests LIKE ?");
-            preparedStatement.setObject(4, MaxGuests + "%");
+            preparedStatement.setInt(4, MaxGuests);
             ResultSet result = preparedStatement.executeQuery();
             List<Accomodation> entries = new ArrayList<>();
             while (result.next()) {
@@ -60,7 +59,7 @@ public class AccomodationService {
                         result.getString("type"),
                         result.getString("bed_type"),
                         result.getInt("max_guests"),
-                        result.getString("description") ));
+                        result.getString("description")));
             }
             return entries;
 
@@ -69,14 +68,17 @@ public class AccomodationService {
         }
         return null;
     }
-/*
+
+
     // Update
-    public void updatePhoneBookEntry(PhoneBookEntry updatedPhoneBookEntry) {
+    public void updateAccomodation(Accomodation updatedAccomodation) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE phone_book SET name = ?, phone_number = ? WHERE id = ?");
-            preparedStatement.setObject(3, updatedPhoneBookEntry.getId());
-            preparedStatement.setString(1, updatedPhoneBookEntry.getName());
-            preparedStatement.setString(2, updatedPhoneBookEntry.getPhoneNumber());
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE accomodation SET name = ?, phone_number = ? WHERE id = ?");
+            preparedStatement.setObject(1, updatedAccomodation.getId());
+            preparedStatement.setString(2, updatedAccomodation.getType());
+            preparedStatement.setString(3, updatedAccomodation.getBedType());
+            preparedStatement.setInt(4, updatedAccomodation.getMaxGuests());
+            preparedStatement.setString(5, updatedAccomodation.getDescription());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -84,15 +86,13 @@ public class AccomodationService {
     }
 
     // Delete
-    public void deletePhoneBookEntry(UUID phoneBookEntryId) {
+    public void deleteAccomodation(int id) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM phone_book WHERE id = ?");
-            preparedStatement.setObject(1, phoneBookEntryId);
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM accomodation WHERE id = ?");
+            preparedStatement.setObject(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-  /*
- */
 }
